@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from utils import analysis  # importa seu módulo analysis.py
+from .utils import analysis  # importa seu módulo analysis.py
+
 
 app = Flask(__name__)
 
