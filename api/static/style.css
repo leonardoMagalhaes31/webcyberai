@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    background-color: #1f1f1f !important;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+h2 {
+    font-weight: 600;
+    color: #ed0000;
+}
+
+input.form-control {
+    background-color: #2a2a2a;
+    border: 1.5px solid #444;
+    color: #ddd;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+    border-color: #5a9bf6;
+    box-shadow: 0 0 8px #5a9bf6;
+    background-color: #333;
+    color: #ff0000;
+}
+
+.btn-primary, .btn-secondary, .btn-warning {
+    border-radius: 10px;
+    padding: 12px 0;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(90, 155, 246, 0.4);
+}
+
+.btn-primary:hover {
+    background-color: #4a8ef7;
+    box-shadow: 0 6px 14px rgba(74, 142, 247, 0.7);
+}
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+    box-shadow: 0 6px 14px rgba(108, 117, 125, 0.7);
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    box-shadow: 0 6px 14px rgba(224, 168, 0, 0.7);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 20px;
+    margin-right: 8px;
+    background-color: #2a2a2a;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #5a9bf6;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 4px 12px rgba(90, 155, 246, 0.5);
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #4a8ef7;
+    color: rgb(255, 255, 255);
+}
+
+.alert-info {
+    background-color: #2a2a2a;
+    border: none;
+    color: #bbb;
+    font-size: 0.9rem;
+    white-space: pre-wrap; /* para respeitar quebras de linha */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+.btn {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease-in-out;
+    border-radius: 12px; /* arredondamento moderno */
+}
+
+.btn:focus,
+.btn:active,
+.btn:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25); /* sombra leve azul */
+    border: none !important;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+.nav-tabs {
+    border-bottom: none !important;
+}
+
+.nav-tabs .nav-link {
+    border: none !important;
+    border-radius: 12px !important;
+    margin-right: 5px;
+    background-color: #f1f1f1; /* ou use transparente se preferir */
+    color: #000;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+::placeholder {
+    color: rgb(255, 255, 255) !important;
+    opacity: 10;
+}
+.card pre {
+    background-color: #1e1e1e;
+    padding: 1rem;
+    border-radius: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+}

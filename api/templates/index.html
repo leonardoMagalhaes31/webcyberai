@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber AI - Analisador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: #121212;
+        }
+        .form-control::placeholder {
+            color: #ffffff !important;
+            opacity: 0.8;
+        }
+        .nav-tabs .nav-link {
+            background-color: transparent;
+            color: white;
+            border: none;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" style="margin-top: 100px; max-width: 600px;">
+    <div class="card shadow-lg p-4 rounded-4 bg-secondary bg-opacity-10 border-0">
+        <h2 class="text-center mb-4 text-white">Análise de Ameaças</h2>
+
+        <!-- Tabs -->
+        <div class="d-flex justify-content-center">
+            <ul class="nav nav-tabs mb-3 border-0" id="analyzeTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if aba_ativa == 'ip' %}active{% endif %}" id="ip-tab" data-bs-toggle="tab" data-bs-target="#ip" type="button" role="tab">IP/Domínio</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if aba_ativa == 'hash' %}active{% endif %}" id="hash-tab" data-bs-toggle="tab" data-bs-target="#hash" type="button" role="tab">Hash</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if aba_ativa == 'file' %}active{% endif %}" id="file-tab" data-bs-toggle="tab" data-bs-target="#file" type="button" role="tab">Arquivo</button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="tab-content" id="analyzeTabsContent">
+            <!-- IP/Domínio -->
+            <div class="tab-pane fade {% if aba_ativa == 'ip' %}show active{% endif %}" id="ip" role="tabpanel">
+                <form action="/analisar" method="POST">
+                    <div class="mb-3">
+                        <input type="text" name="target" class="form-control bg-dark text-white" placeholder="Digite um IP ou Domínio" required>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary w-100" type="submit">Analisar IP/Domínio</button>
+                    </div>
+                </form>
+
+                {% if resultado_ip %}
+                <div class="card bg-dark text-white mt-3 p-3">
+                    <h5 class="mb-2"><i class="bi bi-shield-shaded me-2"></i>AbuseIPDB</h5>
+                    <ul class="mb-3">
+                        {% for linha in resultado_ip.replace('<br>', '\n').split('\n') if 'Abuse' in linha or 'Total Reports' in linha %}
+                            <li>{{ linha.strip() }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h5 class="mb-2"><i class="bi bi-bug me-2"></i>VirusTotal</h5>
+                    <ul class="mb-3">
+                        {% for linha in resultado_ip.replace('<br>', '\n').split('\n') if 'Reputation' in linha or 'Malicious' in linha or 'Suspicious' in linha or 'Undetected' in linha %}
+                            <li>{{ linha.strip() }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h5 class="mb-2"><i class="bi bi-hdd-network me-2"></i>Shodan</h5>
+                    <ul class="mb-0">
+                        {% for linha in resultado_ip.replace('<br>', '\n').split('\n') if 'Shodan' in linha or 'Org' in linha or 'OS' in linha or 'Ports' in linha %}
+                            <li>{{ linha.strip().replace('Shodan ', '') }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Hash -->
+            <div class="tab-pane fade {% if aba_ativa == 'hash' %}show active{% endif %}" id="hash" role="tabpanel">
+                <form action="/analisar_hash" method="POST">
+                    <div class="mb-3">
+                        <input type="text" name="hash" class="form-control bg-dark text-white" placeholder="Digite uma Hash (MD5, SHA-1, SHA-256)" required>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-secondary w-100" type="submit">Analisar Hash</button>
+                    </div>
+                </form>
+            
+                {% if resultado_hash %}
+                <div class="card bg-dark text-white mt-3 p-3">
+                    <h5 class="mb-2"><i class="bi bi-hash me-2"></i>Resultado da Análise de Hash</h5>
+                    <ul class="mb-0">
+                        {% for linha in resultado_hash.replace('<br>', '\n').split('\n') %}
+                            <li>{{ linha.strip() }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Arquivo -->
+            <div class="tab-pane fade {% if aba_ativa == 'file' %}show active{% endif %}" id="file" role="tabpanel">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input type="file" name="file" class="form-control bg-dark text-white" required>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-warning w-100" type="submit">Analisar Arquivo</button>
+                    </div>
+                </form>
+
+                {% if resultado_file %}
+                <div class="card bg-dark text-white mt-3 p-3">
+                    <h5 class="mb-2"><i class="bi bi-file-earmark-text me-2"></i>Resultado da Análise de Arquivo</h5>
+                    <ul class="mb-0">
+                        {% for linha in resultado_file.replace('<br>', '\n').split('\n') %}
+                            <li>{{ linha.strip() }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Para cada formulário, adiciona um event listener que limpa o input após o submit
+      const formIP = document.querySelector('form[action="/analisar"]');
+      const formHash = document.querySelector('form[action="/analisar_hash"]');
+      const formFile = document.querySelector('form[action="/upload"]');
+  
+      if (formIP) {
+        formIP.addEventListener('submit', () => {
+          setTimeout(() => {
+            formIP.querySelector('input[name="target"]').value = '';
+          }, 100);
+        });
+      }
+  
+      if (formHash) {
+        formHash.addEventListener('submit', () => {
+          setTimeout(() => {
+            formHash.querySelector('input[name="hash"]').value = '';
+          }, 100);
+        });
+      }
+  
+      if (formFile) {
+        formFile.addEventListener('submit', () => {
+          setTimeout(() => {
+            formFile.querySelector('input[name="file"]').value = '';
+          }, 100);
+        });
+      }
+    });
+  </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Pega todos os botões das abas
+      const tabs = document.querySelectorAll('#analyzeTabs button.nav-link');
+  
+      // Função para limpar resultados
+      function limparResultados() {
+        // Seleciona os contêineres dos resultados de cada aba
+        const resultados = [
+          document.querySelector('#ip .card.bg-dark.text-white'),
+          document.querySelector('#hash .card.bg-dark.text-white'),
+          document.querySelector('#file .card.bg-dark.text-white')
+        ];
+  
+        resultados.forEach(div => {
+          if (div) {
+            div.innerHTML = ''; // limpa o conteúdo do resultado
+          }
+        });
+      }
+  
+      // Ao clicar em qualquer aba, limpa os resultados
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          limparResultados();
+        });
+      });
+    });
+  </script>
+    
+</body>
+</html>
